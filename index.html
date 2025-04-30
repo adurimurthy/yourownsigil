@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sigil Generator</title>
+    <title>Advanced Sigil Generator</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <style>
@@ -11,29 +11,57 @@
             font-family: 'Inter', sans-serif;
         }
         .sigil {
-            font-size: 2em; /* Adjust as needed */
-            user-select: none; /* Prevent text selection */
-            cursor: pointer; /* Show a pointer cursor on hover */
-            transition: transform 0.2s ease-in-out; /* Smooth transition */
-        }
-        .sigil:hover {
-            transform: scale(1.2); /* Enlarge on hover */
+            font-size: 3em; /* Increased size for symbolic characters */
+            user-select: none;
+            cursor: default; /* Default cursor as it's not interactive */
+            letter-spacing: 0.1em; /* Add spacing between symbols */
+            display: inline-block; /* Ensure transform works */
+            transition: transform 0.3s ease-in-out;
         }
         .sigil-container {
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 200px; /* Ensure minimum height for visibility */
-            border: 1px dashed #ccc; /* Optional: Add a border for visual separation */
-            margin-top: 1rem; /* Add some margin */
+            min-height: 150px; /* Adjusted height */
+            border: 1px dashed #ccc;
+            margin-top: 1.5rem; /* Increased margin */
             border-radius: 0.5rem;
+            padding: 1rem; /* Add padding */
+            background-color: #f9fafb; /* Light background for contrast */
         }
-
+        .instructions {
+            background-color: #f3f4f6; /* Slightly different background */
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin-top: 1.5rem;
+        }
+        .instructions h3 {
+            font-weight: 600;
+            color: #374151; /* Darker gray */
+            margin-bottom: 0.5rem;
+        }
+        .instructions p, .instructions ul {
+            font-size: 0.9rem;
+            color: #4b5563; /* Medium gray */
+            line-height: 1.6;
+        }
+        .instructions li {
+            margin-bottom: 0.25rem;
+        }
+        /* Add a subtle animation on generation */
+        @keyframes fadeInScale {
+            0% { opacity: 0; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        .sigil-generated {
+            animation: fadeInScale 0.5s ease-out forwards;
+        }
     </style>
 </head>
-<body class="bg-gradient-to-br from-gray-100 to-gray-300 min-h-screen flex justify-center items-center py-8">
-    <div class="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
-        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Generate Your Sigil</h1>
+<body class="bg-gradient-to-br from-gray-100 to-gray-300 min-h-screen flex justify-center items-center py-8 px-4">
+    <div class="bg-white rounded-lg shadow-xl p-8 w-full max-w-lg">
+        <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center">Generate Your Sigil</h1>
         <form id="sigilForm" class="space-y-4">
             <div>
                 <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
@@ -48,31 +76,91 @@
                 <input type="text" id="country" name="country" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
             </div>
             <div>
-                <label for="reliefArea" class="block text-gray-700 text-sm font-bold mb-2">Area of Relief Required:</label>
+                <label for="reliefArea" class="block text-gray-700 text-sm font-bold mb-2">Area of Intent:</label>
                 <select id="reliefArea" name="reliefArea" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     <option value="" disabled selected>Select an area</option>
-                    <option value="Health">Health</option>
-                    <option value="Relationships">Relationships</option>
-                    <option value="Career">Career</option>
-                    <option value="Finance">Finance</option>
+                    <option value="Health">Health & Well-being</option>
+                    <option value="Relationships">Harmonious Relationships</option>
+                    <option value="Career">Career Success</option>
+                    <option value="Finance">Financial Abundance</option>
                     <option value="PersonalGrowth">Personal Growth</option>
-                    <option value="Creativity">Creativity</option>
-                    <option value="Protection">Protection</option>
-                    <option value="Spirituality">Spirituality</option>
+                    <option value="Creativity">Enhanced Creativity</option>
+                    <option value="Protection">Protection & Safety</option>
+                    <option value="Spirituality">Spiritual Connection</option>
+                    <option value="Clarity">Clarity & Focus</option>
+                    <option value="Peace">Inner Peace</option>
                 </select>
             </div>
-            <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+             <div>
+                <label for="specificIntent" class="block text-gray-700 text-sm font-bold mb-2">Refine Your Intent (Optional):</label>
+                <input type="text" id="specificIntent" name="specificIntent" placeholder="e.g., 'Find a fulfilling new job'" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-bold py-3 px-4 rounded focus:outline-none focus:shadow-outline w-full text-lg transition duration-150 ease-in-out">
                 Generate Sigil
             </button>
         </form>
+
         <div id="sigilOutput" class="sigil-container mt-6 text-center">
-            <span id="generatedSigil" class="sigil text-gray-700"></span>
+            <span id="generatedSigil" class="sigil text-gray-800"></span>
         </div>
-        <p id="sigilMeaning" class="text-gray-600 text-sm mt-4 text-center">
-        </p>
+        <p id="sigilMeaning" class="text-gray-600 text-sm mt-2 text-center">
+            </p>
+
+        <div id="activationInstructions" class="instructions mt-6 hidden">
+             <h2 class="text-xl font-semibold text-gray-800 mb-4 text-center">Working with Your Sigil</h2>
+
+            <div class="mb-4">
+                <h3>Understanding Your Sigil</h3>
+                <p>This sigil is a unique symbol representing your stated intent. It's created by simplifying your intention into its core components and translating them into a visual form. The process itself helps focus your mind on the goal.</p>
+            </div>
+
+            <div class="mb-4">
+                <h3>Activation (Charging the Sigil)</h3>
+                <p>Activation infuses the sigil with your focused energy and intent, sending it into your subconscious or the universe. Choose a method that resonates with you:</p>
+                <ul>
+                    <li><strong>Focused Meditation:</strong> Gaze at the sigil while intensely focusing on your desired outcome as if it has already happened. Feel the emotions associated with success. Do this until you feel a sense of completion or release.</li>
+                    <li><strong>Visualization:</strong> Close your eyes, visualize the sigil glowing with energy, and then visualize your goal being achieved.</li>
+                    <li><strong>Symbolic Release:</strong> Draw the sigil on paper and then burn it (safely!), releasing the energy. Alternatively, draw it on something dissolvable and place it in water, or simply tear it up while focusing on release.</li>
+                    <li><strong>Subliminal Placement:</strong> Place the sigil somewhere you'll see it often but won't consciously analyze it (e.g., inside a book, on a mirror you glance at).</li>
+                </ul>
+                <p>The key is to charge it with strong intention and then "forget" about it consciously, trusting the process.</p>
+            </div>
+
+            <div>
+                <h3>Daily Practice (Optional Reinforcement)</h3>
+                <p>While conscious obsession can hinder results ("lust for result"), gentle reinforcement can be helpful:</p>
+                <ul>
+                    <li><strong>Morning Focus:</strong> Briefly bring the sigil to mind upon waking, reaffirming your intent with positive feeling.</li>
+                    <li><strong>Redrawing:</strong> Occasionally redraw the sigil to reconnect with its energy.</li>
+                    <li><strong>Gratitude:</strong> Act as if your goal is already manifesting, expressing gratitude for its progress.</li>
+                </ul>
+                <p>Consistency and belief are important. Trust in your intention and the symbol you've created.</p>
+                 <p class="mt-3 text-xs text-gray-500">Disclaimer: Sigil magick is an esoteric practice. Results are subjective and not guaranteed. This tool is for personal exploration and entertainment.</p>
+            </div>
+        </div>
     </div>
 
     <script>
+        // Symbol mapping (using a mix of geometric shapes, box drawing, and other symbols)
+        // Ensure these characters render reasonably well across browsers/OS
+        const symbolMap = {
+            'B': '⊛', 'C': '☾', 'D': '△', 'F': '⚡', 'G': '☍', 'H': '♓',
+            'J': '☊', 'K': '⋇', 'L': '⎅', 'M': '♒', 'N': '⍀', 'P': '⍋',
+            'Q': '☌', 'R': '♈', 'S': '§', 'T': '✝', 'V': '▽', 'W': '〰',
+            'X': '⊗', 'Y': '⍦', 'Z': '⚡' // Re-use symbol for Z
+        };
+
+        // Function to generate a simple hash from a string (for seeding randomness)
+        function simpleHash(str) {
+            let hash = 0;
+            for (let i = 0; i < str.length; i++) {
+                const char = str.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash |= 0; // Convert to 32bit integer
+            }
+            return Math.abs(hash);
+        }
+
         document.getElementById('sigilForm').addEventListener('submit', function(event) {
             event.preventDefault();
 
@@ -80,56 +168,58 @@
             const dob = document.getElementById('dob').value;
             const country = document.getElementById('country').value;
             const reliefArea = document.getElementById('reliefArea').value;
+            const specificIntent = document.getElementById('specificIntent').value.trim();
 
-            // Combine inputs to create a base string
-            const combinedInput = `${name.toLowerCase()}${dob.replace(/-/g, '')}${country.toLowerCase()}${reliefArea.toLowerCase()}`;
+            // Use specific intent if provided, otherwise use the relief area description
+            const intentText = specificIntent || reliefArea;
 
-            // Generate a simple hash (for demonstration purposes)
-            let hash = 0;
-            for (let i = 0; i < combinedInput.length; i++) {
-                hash = combinedInput.charCodeAt(i) + ((hash << 5) - hash);
+            // 1. Prepare the Intent String
+            let processedIntent = intentText.toUpperCase().replace(/[^A-Z]/g, ''); // Keep only letters
+
+            // 2. Remove Vowels
+            processedIntent = processedIntent.replace(/[AEIOU]/g, '');
+
+            // 3. Remove Duplicate Consonants
+            const uniqueConsonants = [...new Set(processedIntent.split(''))];
+
+            // Seed randomness using other inputs (optional variation)
+            const seedString = `${name}${dob}${country}`;
+            const seed = simpleHash(seedString);
+            // Simple shuffle based on seed - predictable shuffle for same inputs
+            uniqueConsonants.sort((a, b) => (simpleHash(a + seed) % 10) - (simpleHash(b + seed) % 10));
+
+
+            // 4. Map to Symbols
+            let sigilString = '';
+            for (const char of uniqueConsonants) {
+                sigilString += symbolMap[char] || ''; // Add symbol or empty if not found
             }
 
-            // Convert hash to a more manageable range (adjust as needed)
-            const sigilCode = Math.abs(hash % 26); // Example: A-Z
+            // Handle cases with no consonants or very short intents
+             if (sigilString.length === 0 && intentText.length > 0) {
+                 // Fallback: Use first letter symbol or a default symbol
+                 const firstLetter = intentText.charAt(0).toUpperCase();
+                 sigilString = symbolMap[firstLetter] || '✧'; // Default symbol
+             } else if (sigilString.length === 0) {
+                 sigilString = '✧'; // Default if intent is empty
+             }
 
-            // Map the hash to a sigil (basic example - replace with your sigil generation logic)
-            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-            const generatedSigil = alphabet[sigilCode];
 
-            document.getElementById('generatedSigil').textContent = generatedSigil;
+            // Display the Sigil
+            const sigilElement = document.getElementById('generatedSigil');
+            sigilElement.textContent = sigilString;
+            // Add class to trigger animation, remove after delay
+            sigilElement.classList.add('sigil-generated');
+            setTimeout(() => {
+                 sigilElement.classList.remove('sigil-generated');
+            }, 500); // Match animation duration
 
-            let meaning = "This sigil is a representation of your intent for ";
-            switch(reliefArea) {
-                case "Health":
-                    meaning += "improved health and well-being.";
-                    break;
-                case "Relationships":
-                    meaning += "harmonious and fulfilling relationships.";
-                    break;
-                case "Career":
-                    meaning += "success and advancement in your career.";
-                    break;
-                case "Finance":
-                    meaning += "financial stability and abundance.";
-                    break;
-                case "PersonalGrowth":
-                    meaning += "personal growth and self-discovery.";
-                    break;
-                 case "Creativity":
-                    meaning += "unlocking your creative potential.";
-                    break;
-                case "Protection":
-                    meaning += "protection from negative energies.";
-                    break;
-                case "Spirituality":
-                    meaning += "deepening your spiritual connection.";
-                    break;
-                default:
-                    meaning += "resolving your issue."
-            }
-            document.getElementById('sigilMeaning').textContent = meaning;
 
+            // Display Meaning/Intent
+            document.getElementById('sigilMeaning').textContent = `Sigil representing the intent: "${intentText}"`;
+
+            // Show Instructions
+            document.getElementById('activationInstructions').classList.remove('hidden');
         });
     </script>
 </body>
