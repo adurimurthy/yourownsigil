@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sigil Generator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .sigil {
+            font-size: 2em; /* Adjust as needed */
+            user-select: none; /* Prevent text selection */
+            cursor: pointer; /* Show a pointer cursor on hover */
+            transition: transform 0.2s ease-in-out; /* Smooth transition */
+        }
+        .sigil:hover {
+            transform: scale(1.2); /* Enlarge on hover */
+        }
+        .sigil-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 200px; /* Ensure minimum height for visibility */
+            border: 1px dashed #ccc; /* Optional: Add a border for visual separation */
+            margin-top: 1rem; /* Add some margin */
+            border-radius: 0.5rem;
+        }
+
+    </style>
+</head>
+<body class="bg-gradient-to-br from-gray-100 to-gray-300 min-h-screen flex justify-center items-center py-8">
+    <div class="bg-white rounded-lg shadow-md p-8 w-full max-w-md">
+        <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Generate Your Sigil</h1>
+        <form id="sigilForm" class="space-y-4">
+            <div>
+                <label for="name" class="block text-gray-700 text-sm font-bold mb-2">Name:</label>
+                <input type="text" id="name" name="name" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="dob" class="block text-gray-700 text-sm font-bold mb-2">Date of Birth:</label>
+                <input type="date" id="dob" name="dob" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="country" class="block text-gray-700 text-sm font-bold mb-2">Country of Birth:</label>
+                <input type="text" id="country" name="country" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            </div>
+            <div>
+                <label for="reliefArea" class="block text-gray-700 text-sm font-bold mb-2">Area of Relief Required:</label>
+                <select id="reliefArea" name="reliefArea" required class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    <option value="" disabled selected>Select an area</option>
+                    <option value="Health">Health</option>
+                    <option value="Relationships">Relationships</option>
+                    <option value="Career">Career</option>
+                    <option value="Finance">Finance</option>
+                    <option value="PersonalGrowth">Personal Growth</option>
+                    <option value="Creativity">Creativity</option>
+                    <option value="Protection">Protection</option>
+                    <option value="Spirituality">Spirituality</option>
+                </select>
+            </div>
+            <button type="submit" class="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline w-full">
+                Generate Sigil
+            </button>
+        </form>
+        <div id="sigilOutput" class="sigil-container mt-6 text-center">
+            <span id="generatedSigil" class="sigil text-gray-700"></span>
+        </div>
+        <p id="sigilMeaning" class="text-gray-600 text-sm mt-4 text-center">
+        </p>
+    </div>
+
+    <script>
+        document.getElementById('sigilForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const dob = document.getElementById('dob').value;
+            const country = document.getElementById('country').value;
+            const reliefArea = document.getElementById('reliefArea').value;
+
+            // Combine inputs to create a base string
+            const combinedInput = `${name.toLowerCase()}${dob.replace(/-/g, '')}${country.toLowerCase()}${reliefArea.toLowerCase()}`;
+
+            // Generate a simple hash (for demonstration purposes)
+            let hash = 0;
+            for (let i = 0; i < combinedInput.length; i++) {
+                hash = combinedInput.charCodeAt(i) + ((hash << 5) - hash);
+            }
+
+            // Convert hash to a more manageable range (adjust as needed)
+            const sigilCode = Math.abs(hash % 26); // Example: A-Z
+
+            // Map the hash to a sigil (basic example - replace with your sigil generation logic)
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+            const generatedSigil = alphabet[sigilCode];
+
+            document.getElementById('generatedSigil').textContent = generatedSigil;
+
+            let meaning = "This sigil is a representation of your intent for ";
+            switch(reliefArea) {
+                case "Health":
+                    meaning += "improved health and well-being.";
+                    break;
+                case "Relationships":
+                    meaning += "harmonious and fulfilling relationships.";
+                    break;
+                case "Career":
+                    meaning += "success and advancement in your career.";
+                    break;
+                case "Finance":
+                    meaning += "financial stability and abundance.";
+                    break;
+                case "PersonalGrowth":
+                    meaning += "personal growth and self-discovery.";
+                    break;
+                 case "Creativity":
+                    meaning += "unlocking your creative potential.";
+                    break;
+                case "Protection":
+                    meaning += "protection from negative energies.";
+                    break;
+                case "Spirituality":
+                    meaning += "deepening your spiritual connection.";
+                    break;
+                default:
+                    meaning += "resolving your issue."
+            }
+            document.getElementById('sigilMeaning').textContent = meaning;
+
+        });
+    </script>
+</body>
+</html>
